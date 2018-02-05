@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+  
+  <title>Marvel Hangman</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+   <link rel="stylesheet" type="text/css" href="Assets/css/style.css">
+  
+</head>
+<body>
+
+
+<div class="wrapper">
+   <h1><a href="https://cooltext.com"><img src="https://images.cooltext.com/5094406.png" class="hangman" width="381" height="98" alt="HANGMAN" /></a></h1>
+    <h2>Marvel</h2>
+    <h2>Edition</h2>
+    <p class= "empty"> </p>
+    <!-- h1 is going to be replaced by an img of mettalic words that say Hangman. h2 is going to be styled like the marvel logo, which I'm pretty sure I can just do with CSS... SORRY THIS IS AN INCOMPLETE/ COMPLETE MESS? I'm trying but it is a busy week, and this is really hard.-->
+</div>
+<div class="wrapper">
+    <div id="buttons">
+    </div>  
+    
+    <div id="hold">
+    </div>
+    <p id="myTries"></p>
+      
+    
+    <div class="container">
+     
+      <button id="reset">Play Again!</button>
+    </div>
+</div>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+  <script type="text/javascript">
+window.onload = function () {
+  //couldn't figure out how to do this with a button press, so made buttons on the page.
+
+  var alphabet = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h',
+        'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's',
+        't', 'u', 'v', 'w', 'x', 'y', 'z'];
+  
+  var categories;         //Array of Marvel catagories, characters, places, weapons, etc. Not doing this now, not enough time.
+  var chosenCategory;     // Selected catagory, keeping this because when I try to change it now it breaks.
+  var word ;              // Selected word
+  var guess ;             // Geuss
+  var geusses = [ ];      // Stored geusses
+  var tries ;             // Tries left
+  var counter ;           // Count correct geusses
+  var space;              // Number of spaces in word '-'
+
+  // Get elements
+  var showTries = document.getElementById("myTries");
+   var showCatagory = document.getElementById("scatagory"); //again ditching the catagories. maybe once I get everything working I will do one with heroes, villains, objects, places, etc in the marvel universe.
+  
+  // create alphabet ul
+  var buttons = function () {
+    myButtons = document.getElementById('buttons');
+    letters = document.createElement('ul');
+
+    for (var i = 0; i < alphabet.length; i++) {
+      letters.id = 'alphabet';
+      list = document.createElement('li');
+      list.id = 'letter';
+      list.innerHTML = alphabet[i];
+      check();
+      myButtons.appendChild(letters);
+      letters.appendChild(list);
+    }
+  }
+    
+  
+  
+
+  // Create geusses ul
+   result = function () {
+    wordHolder = document.getElementById('hold');
+    correct = document.createElement('ul');
+
+    for (var i = 0; i < word.length; i++) {
+      correct.setAttribute('id', 'my-word');
+      guess = document.createElement('li');
+      guess.setAttribute('class', 'guess');
+      if (word[i] === "-") {
+        guess.innerHTML = "-";
+        space = 1;
+      } else {
+        guess.innerHTML = "_";
+      }
+    //still not clear on the push thing that mike was talking about. again, ran out of time here. I want to keep working on this.
+      geusses.push(guess);
+      wordHolder.appendChild(correct);
+      correct.appendChild(guess);
+    }
+  }
+  
+  // Show tries here
+   comments = function () {
+    showTries.innerHTML = "You have " + tries + " tries left";
+    if (tries < 1) {
+      showTries.innerHTML = "Game Over";
+
+    }
+    for (var i = 0; i < geusses.length; i++) {
+      if (counter + space === geusses.length) {
+        showTries.innerHTML = "You Win!";
+      }
+    }
+  }
+
+ 
+
+
+  // OnClick Function
+   check = function () {
+    list.onclick = function () {
+      var geuss = (this.innerHTML);
+      this.setAttribute("class", "active");
+      this.onclick = null;
+      for (var i = 0; i < word.length; i++) {
+        if (word[i] === geuss) {
+          geusses[i].innerHTML = geuss;
+          counter += 1;
+        } 
+      }
+      var j = (word.indexOf(geuss));
+      if (j === -1) {
+        tries -= 1;
+        comments();
+        animate();
+      } else {
+        comments();
+      }
+    }
+  }
+  
+    
+  // Play
+  play = function () {
+    categories = [
+        ["arc-reactor", "avengers", "iron-man", "thor", "loki", "hulk", "punisher", "rouge", "wolvarine", "stan-lee", "infinity-stones", "daredevil", "the-hand", "thanos", "vision", "scarlet-witch", "gamorah", "drax", "colossus", "striker", "captain-america", "galactus", "spiderman", "kingpin", "emma-frost", "juggernaut", "ghost-rider", "red-skull", "cyclops", "mystique", "apocalypse", "blink", "black-widow", "hawkeye", "star-lord", "angela", "nebula", "lady-death", "phoenix", "magneto", "professor-xavier", "x-men", "rocket", "groot", "morph", "deadpool", "ultron", "winter-soldier", "doctor-strange", "venom", "holocaust", "sabertooth", "vulcan", "blade", "ant-man", "black-panther", "war-machine", "daily-bugle", "hells-kitchen", "sanctum-sanctorum", "stark-tower", "oscorp", "stark-industries", "shield", "sword", "asguard", "ego", "weapon-x", "hydra", "blackbird", "freedoms-lady", "hellcycle", "quinjet", "mjolnir", "adamantium", "vibranium", "kree", "chitauri", "mutants", "shi-ar", "watchers", "symbiote", "morlocks", "celestials", "leigon", "wakanda", "xandar", "gambit", "mantis", "bishop", "jubilee", "iceman", "fantastic-four", "silver-surfer", "yondu", "electra", "bullseye", "stick", "psylocke", "ms-marvel", "the-thing", "human-torch", "mr-fantastic", "susan-storm", "doctor-doom", "tesseract", "ether", "helicarrier", "nick-fury", "storm", "beast", "nightcrawler", "mimic", "sunfire", "wasp", "quicksilver", "cable", "mephisto", "sandman", "doc-octavius", "modok", "green-goblin", "hobgoblin", "vulture", "sentinels", "iron-fist", "luke-cage", "jessica-jones"]
+    ];
+//break these up into categories later. :/
+//I was contemplating different pages for the categories with relavent backgrounds... but that is only if I figured this stuff out first.
+
+//if I wanted to get REALLY ambitious, when a player wins, a picture could pop up of the character or whatever the word is. If it's a character, then a quote of theirs could pop up in the bottom empty portion of the screen. something fun with this, is if hulk is guessed, there is actually audio of him saying HULK SMASH. Definitely something to revist later. lol
+
+//possibly if the player gets so many right in a row, it plays different songs from the marvel movies, or intros to the tv shows. idk
+  
+//i also want to add css animations, for certain amounts of wins.
+
+    chosenCategory = categories[Math.floor(Math.random() * categories.length)];
+    word = chosenCategory[Math.floor(Math.random() * chosenCategory.length)];
+    word = word.replace(/\s/g, "-");
+    console.log(word);
+    buttons();
+
+    geusses = [ ];
+    tries = 10;
+    counter = 0;
+    space = 0;
+    result();
+    comments();
+    selectCat();
+    canvas();
+  }
+
+  play();
+  
+  // not sure what to do here, or why I can't get it to reset. Mike was no longer able to help out with this and had a change of plans this weekend. :(
+
+
+   // Reset
+
+  document.getElementById('reset').onclick = function() {
+    correct.parentNode.removeChild(correct);
+    letters.parentNode.removeChild(letters);
+    context.clearRect(0, 0, 400, 400);
+    play();
+  }
+}
+
+// number of wins are supposed to go at the bottom empty section on the page there. But I haven't even figured out the rest of this stuff in order to even get to that yet. >_<
+</script>
+</body>
+</html>
